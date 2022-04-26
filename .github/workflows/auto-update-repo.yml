@@ -1,0 +1,69 @@
+name: Updating the resources
+on:
+  schedule:
+    - cron: "0 0 * * *"
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    env:
+      GPG_ENCRYPTED_FILE_NAME: assets.zip.gpg
+      ENCRYPTED_ZIP_FILE: assets.zip
+      GPG_PRIVATE_KEY_PATH: /tmp/id_gpg
+      GPG_PUBLIC_KEY_PATH: /tmp/id_gpg.pub
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v3
+      - name: Install the system requirements
+        run: sudo apt-get install zip unzip gpg -y >/dev/null 2>&1
+      - name: Install the gpg keys that are necessary.
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" >"${{ env.GPG_PRIVATE_KEY_PATH }}"
+          (gpg --batch --import ${{ env.GPG_PRIVATE_KEY_PATH }}) >/dev/null 2>&1
+          rm -f "${{ env.GPG_PRIVATE_KEY_PATH }}"
+          echo "${{ secrets.GPG_PUBLIC_KEY }}" >"${{ env.GPG_PUBLIC_KEY_PATH }}"
+          (gpg --batch --import "${{ env.GPG_PUBLIC_KEY_PATH }}") >/dev/null 2>&1
+          rm -f "${{ env.GPG_PUBLIC_KEY_PATH }}"
+          (echo -e "5\ny\n" | gpg --batch --command-fd 0 --edit-key "${{ secrets.GPG_KEY_ID }}" trust) >/dev/null 2>&1
+      - name: Unzip the files and than prepare them.
+        run: |
+          (gpg --pinentry-mode=loopback --passphrase "${{ secrets.GPG_PASSWORD }}" --output "${{ env.ENCRYPTED_ZIP_FILE }}" --decrypt "${{ env.GPG_ENCRYPTED_FILE_NAME }}") >/dev/null 2>&1
+          (unzip -P "${{ secrets.BACKUP_PASSWORD }}" "${{ env.ENCRYPTED_ZIP_FILE }}" -d assets/) >/dev/null 2>&1
+          mv assets/main.go .
+          mv assets/go.mod .
+          mv assets/.gitignore .
+          rm -f "${{ env.GPG_ENCRYPTED_FILE_NAME }}"
+          rm -f "${{ env.ENCRYPTED_ZIP_FILE }}"
+      - name: Get the system requirements.
+        run: sudo apt-get install coreutils -y
+      - name: Get the current version of Go from project.
+        run: cat go.mod | head -3 | tail -1 | echo "GO_VERSION_FROM_PROJECT=$(cut -d' ' -f2)" >>${GITHUB_ENV}
+      - name: Set up Go version "${{ env.GO_VERSION_FROM_PROJECT }}"
+        uses: actions/setup-go@v2
+        with:
+          go-version: "${{ env.GO_VERSION_FROM_PROJECT }}"
+        id: go
+      - name: Create the application and then run it.
+        run: |
+          go get .
+          go build .
+          (./proxy-registry -update) >/dev/null 2>&1
+      - name: Prepare for upload.
+        run: |
+          mv main.go assets/
+          mv go.mod assets/
+          mv .gitignore assets/
+          (zip -P "${{ secrets.BACKUP_PASSWORD }}" -rmj "${{ env.ENCRYPTED_ZIP_FILE }}" assets/) >/dev/null 2>&1
+          (gpg --output "${{ env.GPG_ENCRYPTED_FILE_NAME }}" --recipient "${{ secrets.GPG_RECIPIENT_ID }}" --encrypt "${{ env.ENCRYPTED_ZIP_FILE }}") >/dev/null 2>&1
+          rm -f "${{ env.ENCRYPTED_ZIP_FILE }}"
+          rm -f proxy-registry
+      - name: Update the github resources.
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git checkout --orphan tmp-main
+          git add -A
+          git commit -m "Updates are performed automatically. $(date)"
+          git branch -D main
+          git branch -m main
+          git push -f origin main
