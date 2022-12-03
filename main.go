@@ -156,8 +156,6 @@ func validateProxy(proxy string) bool {
 	}
 	requestDomainList := []string{
 		"https://aws.amazon.com",
-		"https://cloud.google.com",
-		"https://azure.microsoft.com",
 	}
 	for _, domain := range requestDomainList {
 		request, err := http.NewRequest("GET", domain, nil)
