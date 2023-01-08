@@ -335,7 +335,7 @@ func fileExists(filename string) bool {
 }
 
 // Get the protocol of the proxy.
-func getProxyProtocol(content string) string {
+func getProxyProtocol(content string) []string {
 	proxyProtocolList := []string{
 		"http://",
 		"https://",
@@ -349,7 +349,7 @@ func getProxyProtocol(content string) string {
 			validProtocolList = append(validProtocolList, protocol)
 		}
 	}
-	return validProtocolList[0]
+	return validProtocolList
 }
 
 // Remove all the prefix from the proxy.
@@ -372,18 +372,12 @@ func removePrefixFromProxy(content []string) []string {
 
 // Validate each protocol and return the valid ones.
 func validateEachProxyProtocol(content []string) []string {
-	proxyProtocolList := []string{
-		"http://",
-		"https://",
-		"socks4://",
-		"socks5://",
-	}
 	var returnSlice []string
 	for _, proxy := range content {
-		for _, protocol := range proxyProtocolList {
-			finalString := protocol + proxy
-			if validateProxy(finalString) {
-				returnSlice = append(returnSlice, finalString)
+		proxyProtocol := getProxyProtocol(proxy)
+		if len(proxyProtocol) > 0 {
+			for _, protocol := range proxyProtocol[0:] {
+				returnSlice = append(returnSlice, protocol+proxy)
 			}
 		}
 	}
