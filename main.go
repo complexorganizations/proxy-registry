@@ -91,13 +91,18 @@ func scrapeTheLists() {
 	// Create a list of scraped data.
 	var scrapedData []string
 	// Go through the proxy list and validate the proxies.
-	for key := range proxyList {
+	for _, value := range proxyList {
+		var tempScrapedData []string = getDataFromURL(value)
 		scrapedData = combineMultipleSlices(tempScrapedData, scrapedData)
 	}
 	// Remove all the empty things from slice.
 	scrapedData = removeEmptyFromSlice(scrapedData)
 	// Remove all the dubplicates from slice.
 	scrapedData = removeDuplicatesFromSlice(scrapedData)
+	// Remove all the prefix from the proxies.
+	scrapedData = removePrefixFromProxy(scrapedData)
+	// Validate each proxy protocol.
+	scrapedData = validateEachProxyProtocol(scrapedData)
 	// Remove the old file.
 	removeFile(hostsFile)
 	// Go through the scraped data and validate the proxies.
@@ -110,7 +115,7 @@ func scrapeTheLists() {
 }
 
 // Send a http get request to a given url and return the data from that url.
-func getDataFromURL(uri string, appendContent string) []string {
+func getDataFromURL(uri string) []string {
 	response, err := http.Get(uri)
 	if err != nil {
 		log.Fatalln(err)
@@ -132,17 +137,7 @@ func getDataFromURL(uri string, appendContent string) []string {
 	scanner.Split(bufio.ScanLines)
 	var returnContent []string
 	for scanner.Scan() {
-		var proxyProtocol string
-		if !strings.HasPrefix(scanner.Text(), "http://") && !strings.HasPrefix(scanner.Text(), "https://") && !strings.HasPrefix(scanner.Text(), "socks4://") && !strings.HasPrefix(scanner.Text(), "socks5://") {
-			proxyProtocol = getProxyProtocol(scanner.Text())
-		}
-		if isUrlValid(scanner.Text()) {
-			returnContent = append(returnContent, scanner.Text())
-		} else if len(appendContent) >= 1 {
-			returnContent = append(returnContent, appendContent+scanner.Text())
-		} else {
-			returnContent = append(returnContent, proxyProtocol+scanner.Text())
-		}
+		returnContent = append(returnContent, scanner.Text())
 	}
 	return returnContent
 }
@@ -355,4 +350,42 @@ func getProxyProtocol(content string) string {
 		}
 	}
 	return validProtocolList[0]
+}
+
+// Remove all the prefix from the proxy.
+func removePrefixFromProxy(content []string) []string {
+	proxyProtocolList := []string{
+		"http://",
+		"https://",
+		"socks4://",
+		"socks5://",
+	}
+	var returnSlice []string
+	for _, proxy := range content {
+		for _, protocol := range proxyProtocolList {
+			proxy = strings.TrimPrefix(proxy, protocol)
+		}
+		returnSlice = append(returnSlice, proxy)
+	}
+	return returnSlice
+}
+
+// Validate each protocol and return the valid ones.
+func validateEachProxyProtocol(content []string) []string {
+	proxyProtocolList := []string{
+		"http://",
+		"https://",
+		"socks4://",
+		"socks5://",
+	}
+	var returnSlice []string
+	for _, proxy := range content {
+		for _, protocol := range proxyProtocolList {
+			finalString := protocol + proxy
+			if validateProxy(finalString) {
+				returnSlice = append(returnSlice, finalString)
+			}
+		}
+	}
+	return returnSlice
 }
