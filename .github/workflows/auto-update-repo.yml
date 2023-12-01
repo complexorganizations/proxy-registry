@@ -1,0 +1,34 @@
+name: Updating the resources
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+jobs:
+  build:
+    name: Build
+    runs-on: windows-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v4
+      - name: Set up Go version
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: "go.mod"
+          cache: true
+          check-latest: true
+        id: go
+      - name: Create the application and then run it.
+        run: |
+          go get .
+          go build .
+          .\proxy-registry.exe -update
+      - name: Update the github resources.
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git checkout --orphan tmp-main
+          git add -A
+          git commit -m "Updates are performed automatically. $(date)"
+          git branch -D main
+          git branch -m main
+          git push --set-upstream --force origin main
