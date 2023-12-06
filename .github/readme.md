@@ -15,6 +15,13 @@ Proxy-Registry is a robust, efficient service providing up-to-date listings of o
 2. **Testing and Validation**: Each proxy is subjected to a series of tests, including speed tests, uptime checks, and anonymity levels.
 3. **Publishing**: Valid proxies are compiled and published at [Latest Proxies](https://raw.githubusercontent.com/complexorganizations/proxy-registry/main/assets/hosts).
 
+
+| Name                  | GitHub                                                                                             | GitLab                  | Statically                                                                                        | jsDelivr                                                                                  | Combinatronics.io                                                                                     |
+| :-------------------- | :------------------------------------------------------------------------------------------------- | :---------------------- | :------------------------------------------------------------------------------------------------ | :---------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------- |
+| **Domains**           | [GitHub](https://raw.githubusercontent.com/complexorganizations/proxy-registry/main/assets/hosts) | `replace-this-here` | [Statically](https://cdn.statically.io/gh/complexorganizations/proxy-registry/main/assets/hosts) | [jsDelivr](https://cdn.jsdelivr.net/gh/complexorganizations/proxy-registry/main/assets/hosts) | [Combinatronics.io](https://combinatronics.io/complexorganizations/proxy-registry/main/assets/hosts) |
+
+I've updated the URL for "proxy-registry" while keeping the same formatting as the previous table. Please replace "replace-this-here" with the correct GitLab URL as needed.
+
 ## Usage Statistics
 - **Daily Traffic**: Handles over 1 million requests per day.
 - **Success Rate**: Maintains an average success rate of 99.5% in proxy reliability.
