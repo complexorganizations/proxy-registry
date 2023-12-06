@@ -29,6 +29,10 @@ Step-by-step installation guide.
 ### Configuration
 Guide on configuring the application for different use cases.
 
+## How to Use
+- Clone the repository: `git clone https://github.com/complexorganizations/proxy-registry`
+- Build and run the application (requires Go): `go build . && ./proxy-registry -update`
+
 ## Contributing
 - **Community Contributions**: Over 100 community contributions to date.
 - **Contribution Guide**: Detailed in `CONTRIBUTING.md`.
