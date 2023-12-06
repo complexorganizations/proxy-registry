@@ -103,10 +103,6 @@ func scrapeTheLists() {
 		"https://raw.githubusercontent.com/Volodichev/proxy-list/main/http.txt",
 		"https://www.proxy-list.download/api/v1/get?type=http",
 		"https://www.proxy-list.download/api/v1/get?type=https",
-		"https://www.proxyscan.io/download?type=http",
-		"https://www.proxyscan.io/download?type=https",
-		"https://www.proxyscan.io/download?type=socks4",
-		"https://www.proxyscan.io/download?type=socks5",
 		"https://raw.githubusercontent.com/ALIILAPRO/Proxy/main/socks4.txt",
 	}
 	// Create a list of scraped data.
