@@ -3,6 +3,8 @@
 ## Overview
 Proxy-Registry is a robust, efficient service providing up-to-date listings of open and public proxies. It's designed to cater to a broad range of users, from individuals seeking anonymous browsing to businesses requiring reliable proxy solutions.
 
+- **Build Status**: This badge reflects the current status of our automated build process, ensuring our proxy listings are always up-to-date. [![Updating the resources](https://github.com/complexorganizations/proxy-registry/actions/workflows/auto-update-repo.yml/badge.svg)](https://github.com/complexorganizations/proxy-registry/actions/workflows/auto-update-repo.yml)
+
 ## Features
 - **Automated Proxy Scraping**: Harvests over 10,000 proxies daily from 50+ global sources.
 - **Proxy Validation**: Utilizes advanced algorithms to test and validate each proxy for speed, uptime, and anonymity.
