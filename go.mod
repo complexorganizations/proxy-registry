@@ -1,3 +1,3 @@
 module github.com/complexorganizations/proxy-registry
 
-go 1.20
+go 1.21
