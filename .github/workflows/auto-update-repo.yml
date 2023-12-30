@@ -2,7 +2,7 @@ name: Updating the resources                # Name of the workflow.
 
 on:                                        # Triggers for the workflow.
   schedule:                                
-    - cron: "0 * * * *"                    # Runs hourly (at the start of every hour).
+    - cron: "0 0 * * *"                    # Runs hourly (at the start of every hour).
   workflow_dispatch:                       # Allows manual triggering from GitHub UI.
 
 jobs:                                      
