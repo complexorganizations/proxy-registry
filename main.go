@@ -450,14 +450,14 @@ func validateEachProxyProtocolAndWriteToDisk(content string, protocolWaitGroup *
 
 // Clean up the history file.
 func cleanUpTheHistoryFile() {
+	// Read the history file and append it to a slice.
+	historySlice := readAppendLineByLine(historyFile)
 	// Remove the history file at the 1st of every year.
 	if time.Now().Month().String() == "January" {
 		if time.Now().Day() == 1 {
 			removeFile(historyFile)
 		}
 	}
-	// Read the history file and append it to a slice.
-	historySlice := readAppendLineByLine(historyFile)
 	// Remove all the duplicates from the slice.
 	historySlice = removeDuplicatesFromSlice(historySlice)
 	// Remove all the empty strings from the slice.
