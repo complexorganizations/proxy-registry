@@ -173,7 +173,7 @@ func validateProxy(proxy string) bool {
 	// Create an HTTP client with the custom transport and a timeout
 	client := &http.Client{
 		Transport: transport,
-		Timeout:   time.Second * 60,
+		Timeout:   time.Second * 180,
 	}
 	// Define a list of domains to test the proxy with
 	requestDomainList := []string{
