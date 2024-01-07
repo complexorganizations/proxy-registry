@@ -52,7 +52,6 @@ func scrapeTheLists() {
 		"https://raw.githubusercontent.com/almroot/proxylist/master/list.txt",
 		"https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt",
 		"https://raw.githubusercontent.com/complexorganizations/proxy-registry/main/assets/history",
-		"https://raw.githubusercontent.com/complexorganizations/proxy-registry/main/assets/hosts",
 		"https://raw.githubusercontent.com/drakelam/Free-Proxy-List/main/proxy_all.txt",
 		"https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/http.txt",
 		"https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/https.txt",
